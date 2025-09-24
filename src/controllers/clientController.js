@@ -1,4 +1,6 @@
 import { createClient, getAllClients, getClientById, updateClient, deleteClient } from '../services/clientServices.js';
+import { getTotalOffersByClient } from '../services/offerServices.js';
+import { getTotalContractsByClient } from '../services/contractServices.js';
 
 async function createClientHandler(req, res) {
     try {
@@ -54,4 +56,18 @@ async function deleteClientHandler(req, res) {
     }
 }
 
-export { createClientHandler, getAllClientsHandler, getClientByIdHandler, updateClientHandler, deleteClientHandler };
+async function getClientStatsHandler(req, res) {
+    try {
+        const clientId = req.params.id;
+        const totalOffers = await getTotalOffersByClient(clientId);
+        const totalContracts = await getTotalContractsByClient(clientId);
+        const hiringPercentage = totalOffers > 0 ? (totalContracts / totalOffers) * 100 : 0;
+
+        const stats = {totalOffers, totalContracts, hiringPercentage: hiringPercentage.toFixed(2)};
+        res.json({ success: true, data: stats });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+}
+
+export { createClientHandler, getAllClientsHandler, getClientByIdHandler, updateClientHandler, deleteClientHandler, getClientStatsHandler };

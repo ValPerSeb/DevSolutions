@@ -1,4 +1,6 @@
+import { getTotalContractsByFreelancer } from '../services/contractServices.js';
 import { createFreelance, getAllFreelances, getFreelanceById, updateFreelance, deleteFreelance } from '../services/freelanceServices.js';
+import { getTotalOffersByFreelancer } from '../services/offerServices.js';
 
 async function createFreelanceHandler(req, res) {
     try {
@@ -54,4 +56,18 @@ async function deleteFreelanceHandler(req, res) {
     }
 }
 
-export { createFreelanceHandler, getAllFreelancesHandler, getFreelanceByIdHandler, updateFreelanceHandler, deleteFreelanceHandler };
+async function getFreelanceStatsHandler(req, res) {
+    try {
+        const freelanceId = req.params.id;
+        const totalOffers = await getTotalOffersByFreelancer(freelanceId);
+        const totalContracts = await getTotalContractsByFreelancer(freelanceId);
+        const hiringPercentage = totalOffers > 0 ? (totalContracts / totalOffers) * 100 : 0;
+
+        const stats = {totalOffers, totalContracts, hiringPercentage: hiringPercentage.toFixed(2)};
+        res.json({ success: true, data: stats });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+}
+
+export { createFreelanceHandler, getAllFreelancesHandler, getFreelanceByIdHandler, updateFreelanceHandler, deleteFreelanceHandler, getFreelanceStatsHandler };

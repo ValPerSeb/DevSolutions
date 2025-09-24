@@ -27,6 +27,30 @@ async function getOfferById(id) {
     }
 }
 
+async function getTotalOffersByClient(clientId) {
+    try {
+        const count = await Offer.count({
+            where: { ownerId: clientId, ownerType: 'client' }
+        });
+        return count;
+    } catch (error) {
+        console.error('Error counting offers for client:', error);
+        throw error;
+    } 
+}
+
+async function getTotalOffersByFreelancer(freelanceId) {
+    try {
+        const count = await Offer.count({
+            where: { ownerId: freelanceId, ownerType: 'freelance' }
+        });
+        return count;
+    } catch (error) {
+        console.error('Error counting offers for client:', error);
+        throw error;
+    } 
+}
+
 async function updateOffer(id, data) {
     try {
         const [updated] = await Offer.update(data, {
@@ -50,4 +74,4 @@ async function deleteOffer(id) {
     }
 }
 
-export { createOffer, getAllOffers, getOfferById, updateOffer, deleteOffer };
+export { createOffer, getAllOffers, getOfferById, getTotalOffersByClient, getTotalOffersByFreelancer, updateOffer, deleteOffer };

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createClientHandler, getAllClientsHandler, getClientByIdHandler, updateClientHandler, deleteClientHandler } from '../controllers/clientController.js';
+import { createClientHandler, getAllClientsHandler, getClientByIdHandler, updateClientHandler, deleteClientHandler, getClientStatsHandler } from '../controllers/clientController.js';
 import { createClientValidator } from '../validator/clientValidator.js';
 import validateResMiddleware from '../middlewares/validateResMiddleware.js';
 
@@ -19,5 +19,8 @@ router.put('/:id', createClientValidator, validateResMiddleware, updateClientHan
 
 // Eliminar cliente
 router.delete('/:id', deleteClientHandler);
+
+// Stats Client
+router.get('/:id/stats', getClientStatsHandler);
 
 export default router;

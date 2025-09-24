@@ -27,6 +27,30 @@ async function getContractById(id) {
     }
 }
 
+async function getTotalContractsByClient(clientId) {
+    try {
+        const count = await Contract.count({
+            where: { clientId: clientId }
+        });
+        return count;
+    } catch (error) {
+        console.error('Error counting contracts for client:', error);
+        throw error;
+    }
+}
+
+async function getTotalContractsByFreelancer(freelanceId) {
+    try {
+        const count = await Contract.count({
+            where: { freelanceId: freelanceId }
+        });
+        return count;
+    } catch (error) {
+        console.error('Error counting contracts for client:', error);
+        throw error;
+    }
+}
+
 async function updateContract(id, data) {
     try {
         const [updated] = await Contract.update(data, {
@@ -50,4 +74,4 @@ async function deleteContract(id) {
     }
 }
 
-export { createContract, getAllContracts, getContractById, updateContract, deleteContract };
+export { createContract, getAllContracts, getContractById, getTotalContractsByClient, getTotalContractsByFreelancer, updateContract, deleteContract };
