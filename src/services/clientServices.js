@@ -1,69 +1,61 @@
 /*Servicio para operaciones CRUD de Client en la base de datos.
  */
-const pool = require('../dataBase/db');
+
+import Client from '../models/Client.js';
 
 //Crear cliente
 async function createClient(client) {
-    const conn = await pool.getConnection();
     try {
-        const { userId, industry, company, language } = client;
-        const [result] = await conn.query(
-            'INSERT INTO clients (userId, industry, company, language) VALUES (?, ?, ?, ?)',
-            [userId, industry, company, language]
-        );
-        return result.insertId;
-    } catch (e) {
-        console.error(e.message);
-        throw e;
-    } finally {
-        conn.release();
+        return await Client.create(client);
+    } catch (error) {
+        console.error('Error creating client:', error);
+        throw error;
     }
 }
 
 //Obtener todos los clientes
 async function getAllClients() {
-    const conn = await pool.getConnection();
     try {
-        const [rows] = await conn.query('SELECT * FROM clients');
-        return rows;
-    } catch (e) {
-        console.error(e.message);
-        throw e;
-    } finally {
-        conn.release();
+        return await Client.findAll();
+    } catch (error) {
+        console.error('Error getting clients:', error);
+        throw error;
+    }
+}
+
+//Obtener cliente por ID
+async function getClientById(id) {
+    try {
+        return await Client.findByPk(id);
+    } catch (error) {
+        console.error('Error getting client:', error);
+        throw error;
     }
 }
 
 //Actualizar cliente
 async function updateClient(id, data) {
-    const conn = await pool.getConnection();
     try {
-        const { industry, company, language } = data;
-        const [result] = await conn.query(
-            'UPDATE clients SET industry=?, company=?, language=? WHERE clientId=?',
-            [industry, company, language, id]
-        );
-        return result.affectedRows > 0;
-    } catch (e) {
-        console.error(e.message);
-        throw e;
-    } finally {
-        conn.release();
+        const [updated] = await Client.update(data, {
+            where: { clientId: id }
+        });
+        return updated > 0;
+    } catch (error) {
+        console.error('Error updating client:', error);
+        throw error;
     }
 }
 
 //Eliminar cliente
 async function deleteClient(id) {
-    const conn = await pool.getConnection();
     try {
-        const [result] = await conn.query('DELETE FROM clients WHERE clientId=?', [id]);
-        return result.affectedRows > 0;
-    } catch (e) {
-        console.error(e.message);
-        throw e;
-    } finally {
-        conn.release();
+        return await Client.destroy({
+            where: { clientId: id }
+        });
+    } catch (error) {
+        console.error('Error deleting client:', error);
+        throw error;
     }
 }
 
-module.exports = {createClient, getAllClients, updateClient, deleteClient};
+export { createClient, getAllClients, getClientById, updateClient, deleteClient };

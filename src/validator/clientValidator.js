@@ -1,8 +1,4 @@
-/*
-  Validador para los datos de Client.
-   Verifica que los campos requeridos estén presentes y cumplan con el formato.
- */
-const { body } = require('express-validator');
+import { body } from 'express-validator';
 
 const createClientValidator = [
     body('userId')
@@ -12,20 +8,17 @@ const createClientValidator = [
     body('industry')
         .isString().withMessage('La industria debe ser texto')
         .trim()
-        .notEmpty().withMessage('La industria es obligatoria')
-        .isLength({ max: 100 }).withMessage('La industria debe tener máximo 100 caracteres'),
+        .notEmpty().withMessage('La industria es obligatoria'),
 
     body('company')
         .isString().withMessage('La compañía debe ser texto')
         .trim()
-        .notEmpty().withMessage('La compañía es obligatoria')
-        .isLength({ max: 100 }).withMessage('La compañía debe tener máximo 100 caracteres'),
+        .notEmpty().withMessage('La compañía es obligatoria'),
 
     body('language')
         .isString().withMessage('El idioma debe ser texto')
         .trim()
         .notEmpty().withMessage('El idioma es obligatorio')
-        .isLength({ max: 50 }).withMessage('El idioma debe tener máximo 50 caracteres')
 ];
 
-module.exports = { createClientValidator };
+export { createClientValidator };

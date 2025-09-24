@@ -1,21 +1,21 @@
-const { Sequelize } = require('sequelize'); //Acá se importa sequelize.
-requiere('dotenv').config(); //Acá se importa dotenv para leer las variables de entorno.
+import 'dotenv/config';
+import { Sequelize } from 'sequelize';
 
 const sequelize = new Sequelize(
     process.env.DB_DATABASE,
     process.env.DB_USER,
     process.env.DB_PASSWORD,
-
     {
         host: process.env.DB_SERVER,
         dialect: process.env.DB_DIALECT,
+        logging: false, // Disable logging
+        dialectOptions: {
+            options: {
+                encrypt: process.env.DB_ENCRYPT === 'true',
+                trustServerCertificate: process.env.DB_TRUST_CERT === 'true',
+            }
+        }
     }
 );
 
-sequelize.authenticate()
-    .then(() => {
-        console.log('Conexión a base de datos exitosa');
-    })
-    .catch(e => console.error('Error al conectar con la base de datos', e));
-
-module.exports = sequelize; //Se exporta la variable sequelize para usarla en otros archivos.
+export default sequelize;

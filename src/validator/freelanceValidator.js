@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+import { body } from 'express-validator';
 
 const createFreelanceValidator = [
     body('userId')
@@ -34,4 +34,4 @@ const createFreelanceValidator = [
         .isNumeric().withMessage('La tarifa por hora debe ser numérica')
 ];
 
-module.exports = { createFreelanceValidator };
+export { createFreelanceValidator };

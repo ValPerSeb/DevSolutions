@@ -1,21 +1,23 @@
-/* ruas para las operaciones CRUD de Client.
- */
-const express = require('express');
+import express from 'express';
+import { createClientHandler, getAllClientsHandler, getClientByIdHandler, updateClientHandler, deleteClientHandler } from '../controllers/clientController.js';
+import { createClientValidator } from '../validator/clientValidator.js';
+import validateResMiddleware from '../middlewares/validateResMiddleware.js';
+
 const router = express.Router();
-const clientCtrl = require('../controllers/clientController');
-const { createClientValidator } = require('../validator/clientValidator');
-const { validateClientResults } = require('../middlewares/clientMiddleware');
 
-//Crear cliente
-router.post('/', createClientValidator, validateClientResults, clientCtrl.createClient);
+// Crear cliente
+router.post('/', createClientValidator, validateResMiddleware, createClientHandler);
 
-//Obtener todos los clientes
-router.get('/', clientCtrl.getAllClients);
+// Obtener todos los clientes
+router.get('/', getAllClientsHandler);
 
-//Actualizar cliente
-router.put('/:id', createClientValidator, validateClientResults, clientCtrl.updateClient);
+// Obtener cliente por ID
+router.get('/:id', getClientByIdHandler);
 
-//Eliminar cliente
-router.delete('/:id', clientCtrl.deleteClient);
+// Actualizar cliente
+router.put('/:id', createClientValidator, validateResMiddleware, updateClientHandler);
 
-module.exports = router;
+// Eliminar cliente
+router.delete('/:id', deleteClientHandler);
+
+export default router;

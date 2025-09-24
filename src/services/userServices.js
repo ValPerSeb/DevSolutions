@@ -4,74 +4,75 @@
   Tabla users id, username, password, firstName, lastName, email, phone, dateOfBirth, dni, city, country
 */
 
-const pool = require('../dataBase/db');
+import User from '../models/User.js';
 
 //Crear usuario
-async function createUser(user) {
-    const conn = await pool.getConnection();
+async function createUser(userData) {
     try {
-        const { username, password, firstName, lastName, email, phone, dateOfBirth, dni, city, country } = user;
-        const [result] = await conn.query(
-            'INSERT INTO users (username, password, firstName, lastName, email, phone, dateOfBirth, dni, city, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [username, password, firstName, lastName, email, phone, dateOfBirth, dni, city, country]
-        );
-    } catch (e) {
-        console.error(e.message);
-        throw e;
+        const user = await User.create(userData);
+        return user;
+    } catch (error) {
+        console.error('Error creating user:', error);
+        throw error;
     }
 }
 
 //Obtener todos los usurios
 async function getAllUsers() {
-    const conn = await pool.getConnection();
     try {
-        const [rows] = await conn.query('SELECT * FROM users');
-        return rows;
-    } catch (e) {
-        console.error(e.message);
-        throw e;
+        return await User.findAll({
+            attributes: { exclude: ['password'] }
+        });
+    } catch (error) {
+        console.error('Error getting users:', error);
+        throw error;
     }
 }
 
 //Obtener usuario por ID
 async function getUserById(id) {
-    const conn = await pool.getConnection();
     try {
-        const [rows] = await conn.query('SELECT * FROM users WHERE id = ?', [id]);
-        return rows[0];
-    } catch (e) {
-        console.error(e.message);
-        throw e;
+        return await User.findByPk(id, {
+            attributes: { exclude: ['password'] }
+        });
+    } catch (error) {
+        console.error('Error getting user:', error);
+        throw error;
     }
 }
 
 //Actualizar usuario
-async function updateUser(id, user) {
-    const conn = await pool.getConnection();
+async function updateUser(id, userData) {
     try {
-        const { username, password, firstName, lastName, email, phone, dateOfBirth, dni, city, country } = user;
-        const [result] = await conn.query(
-            'UPDATE users SET username=?, password=?, firstName=?, lastName=?, email=?, phone=?, dateOfBirth=?, dni=?, city=?, country=? WHERE id=?',
-            [username, password, firstName, lastName, email, phone, dateOfBirth, dni, city, country, id]
-        );
-        return result.affectedRows > 0;
-    } catch (e) {
-        console.error(e.message);
-        throw e;
+        const [updated] = await User.update(userData, {
+            where: { userId: id }
+        });
+        if (updated > 0) {
+            const updatedUser = await User.findByPk(id, {
+                attributes: { exclude: ['password'] }
+            });
+            return updatedUser;
+        }
+        return null;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
     }
 }
 
 //Eliminar usuario
 async function deleteUser(id) {
-    const conn = await pool.getConnection();
     try {
-        const [result] = await conn.query('DELETE FROM users WHERE id = ?', [id]);
-        return result.affectedRows > 0;
-    } catch (e) {
-        console.error(e.message);
-        throw e;
+        const deleted = await User.destroy({
+            where: { userId: id }
+        });
+        return deleted > 0;
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        throw error;
     }
 }
 
-module.exports = {createUser, getAllUsers, getUserById, updateUser, deleteUser};
+export { createUser, getAllUsers, getUserById, updateUser, deleteUser };
+
 

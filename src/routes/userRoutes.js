@@ -1,29 +1,29 @@
 //debe tener el models y moddleware
 
-const express = require('express');
+import express from 'express';
+import { createUserHandler, getAllUsersHandler, getUserByIdHandler, updateUserHandler, deleteUserHandler } from '../controllers/userController.js';
+import { createUserValidator } from '../validator/userValidator.js';
+import validateResMiddleware from '../middlewares/validateResMiddleware.js';
+
 const router = express.Router();
-const usrCtrl =require('../controllers/userController');
-const {createUserValidator} = require('../validator/userValidator'); // Importa validador 
-const {validateResults} = require('../middlewares/userMiddleware'); // Importa middleware de validación
 
-//get es una consulta = select from table
-//post inserciones
-//put / patch actualizaciones
-//delete eliminaciones
-
+// get es una consulta = select from table
+// post inserciones
+// put / patch actualizaciones
+// delete eliminaciones
 //Crear usario
-router.post('/', createUserValidator, validateResults, usrCtrl.createUser);
+router.post('/', createUserValidator, validateResMiddleware, createUserHandler);
 
 //Obtener todos los usuarios
-router.get('/', usrCtrl.getAllUsers);
+router.get('/', getAllUsersHandler);
 
 //Obtener usuario por ID
-router.get('/:id', usrCtrl.getUserById);
+router.get('/:id', getUserByIdHandler);
 
 //actualizar usuario
-router.put('/:id', createUserValidator, validateResults, usrCtrl.updateUser);
+router.put('/:id', createUserValidator, validateResMiddleware, updateUserHandler);
 
 //Eliminar usuario
-router.delete('/:id', usrCtrl.deleteUser);
+router.delete('/:id', deleteUserHandler);
 
-module.exports = router;
+export default router;

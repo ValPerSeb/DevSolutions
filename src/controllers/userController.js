@@ -1,57 +1,57 @@
-const userService = require('../services/userService');
+import { createUser, getAllUsers, getUserById, updateUser, deleteUser } from '../services/userServices.js';
 
-// POST - Crear usuario
-async function createUser(req, res, next) {
-  try {
-    const payload = req.body;
-    const newUser = await userService.createUser(payload);
-    return res.status(201).json({ ok: true, data: newUser });
-  } catch (err) {
-    return next(err);
-  }
+async function createUserHandler(req, res) {
+    try {
+        const user = await createUser(req.body);
+        res.status(201).json({ success: true, data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 }
 
-// GET - lEER por id
-async function getUserById(req, res, next) {
-  try {
-    const user = await userService.getUserById(req.params.id); // lee por unid
-    if (!user) return res.status(404).json({ ok: false, message: 'not found' }); // 404
-    return res.json({ ok: true, data: user });
-  } catch (err) {
-    return next(err);
-  }
+async function getAllUsersHandler(req, res) {
+    try {
+        const users = await getAllUsers();
+        res.json({ success: true, data: users });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 }
 
-// GET - leer todos
-async function getAllUsers(_req, res, next) {
-  try {
-    const users = await userService.getAllUsers();             
-    return res.json({ ok: true, data: users });                
-  } catch (err) {
-    return next(err);
-  }
+async function getUserByIdHandler(req, res) {
+    try {
+        const user = await getUserById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ success: false, error: 'User not found' });
+        }
+        res.json({ success: true, data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 }
 
-// PUT - actualizar
-async function updateUser(req, res, next) {
-  try {
-    const updated = await userService.updateUser(req.params.id, req.body); 
-    if (!updated) return res.status(404).json({ ok: false, message: 'not found' }); 
-    return res.json({ ok: true, data: updated });            
-  } catch (err) {
-    return next(err);
-  }
+async function updateUserHandler(req, res) {
+    try {
+        const updated = await updateUser(req.params.id, req.body);
+        if (!updated) {
+            return res.status(404).json({ success: false, error: 'User not found' });
+        }
+        res.json({ success: true, data: updated });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 }
 
-// DELETE - Delete
-async function deleteUser(req, res, next) {
-  try {
-    const ok = await userService.deleteUser(req.params.id);
-    if (!ok) return res.status(404).json({ ok: false, message: 'not found' });
-    return res.json({ ok: true, message: 'deleted' });
-  } catch (err) {
-    return next(err);
-  }
+async function deleteUserHandler(req, res) {
+    try {
+        const deleted = await deleteUser(req.params.id);
+        if (!deleted) {
+            return res.status(404).json({ success: false, error: 'User not found' });
+        }
+        res.json({ success: true, message: 'User deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 }
 
-module.exports = {createUser, getUserById, getAllUsers, updateUser, deleteUser};
+export { createUserHandler, getAllUsersHandler, getUserByIdHandler, updateUserHandler, deleteUserHandler };
