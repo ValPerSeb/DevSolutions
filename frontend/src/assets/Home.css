@@ -1,0 +1,40 @@
+.home-container {
+  font-family: "Poppins", sans-serif;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #22298d 0%, #1c2276 100%);
+}
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+
+.btn-primary {
+  background-color: #22298d;
+  border-color: #22298d;
+}
+
+.btn-primary:hover {
+  background-color: #1c2276;
+  border-color: #1c2276;
+}
+
+.btn-outline-primary:hover {
+  background-color: #22298d;
+  border-color: #22298d;
+  color: white !important;
+}

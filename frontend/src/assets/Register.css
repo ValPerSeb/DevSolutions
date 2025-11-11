@@ -1,0 +1,20 @@
+.register-page {
+  width: 100%;
+  min-height: calc(100vh - 160px); /* deja espacio para header+footer */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: #fff;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 680px;
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+@media (max-width: 576px) {
+  .register-form { padding: 20px; }
+}

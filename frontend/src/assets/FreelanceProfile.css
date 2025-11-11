@@ -1,0 +1,198 @@
+.freelance-profile-container {
+  min-height: calc(100vh - 160px);
+  background-color: #f8f9fa;
+}
+
+.profile-header {
+  padding: 2rem 0;
+}
+
+/* Avatar */
+.avatar-circle {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #22298d, #6B4C9A);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(34, 41, 141, 0.3);
+}
+
+/* Profile Cards */
+.profile-card, .stats-card, .info-card, .quick-actions {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.profile-card .card-header, .stats-card .card-header, .info-card .card-header {
+  border: none;
+  font-weight: 600;
+}
+
+/* Display Texts */
+.profile-display-text {
+  background: #f8f9fa;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border-left: 4px solid #22298d;
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+.rate-display {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #28a745 !important;
+}
+
+/* Skills Display */
+.skills-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-badge {
+  background: linear-gradient(135deg, #22298d, #6B4C9A);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.skill-badge:hover {
+  transform: translateY(-2px);
+}
+
+/* Hourly Rate Display */
+.hourly-rate-display {
+  padding: 20px 0;
+}
+
+.hourly-rate-display h3 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Stats Items */
+.stat-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-item strong {
+  font-size: 1.1rem;
+}
+
+/* Account Info */
+.account-info p {
+  margin-bottom: 0.5rem;
+  padding: 5px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.account-info p:last-child {
+  border-bottom: none;
+}
+
+/* Quick Actions */
+.quick-actions .btn {
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.quick-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Controls */
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #22298d;
+  box-shadow: 0 0 0 0.2rem rgba(34, 41, 141, 0.25);
+}
+
+/* Buttons */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #22298d, #6B4C9A);
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(34, 41, 141, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .freelance-profile-container {
+    min-height: calc(100vh - 140px);
+  }
+  
+  .profile-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .skills-display {
+    justify-content: center;
+  }
+  
+  .quick-actions .btn {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .hourly-rate-display h3 {
+    font-size: 2rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-card, .stats-card, .info-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Input Group */
+.input-group-text {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  font-weight: 600;
+  color: #22298d;
+}
