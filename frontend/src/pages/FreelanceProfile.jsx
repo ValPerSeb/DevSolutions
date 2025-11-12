@@ -18,7 +18,6 @@ export default function FreelanceProfile() {
 
   const handleEditToggle = () => {
     if (isEditing) {
-      // Si está cancelando la edición, restaurar los datos originales
       setFormData({ ...profile });
     }
     setIsEditing(!isEditing);
@@ -48,21 +47,17 @@ export default function FreelanceProfile() {
 
   return (
     <div className="freelance-profile-container">
-      <div className="container py-5">
-        {/* Header */}
-        <div className="profile-header text-center mb-5">
-          <div className="profile-avatar mb-3">
-            <div className="avatar-circle">
-              <span>FS</span>
-            </div>
-          </div>
-          <h1 className="fw-bold" style={{color: '#22298d'}}>Mi Perfil Freelancer</h1>
-          <p className="lead text-muted">Gestiona tu información profesional y destaca tus habilidades</p>
+      <div className="container py-4"> {/* Reducido padding vertical */}
+        {/* Header más compacto */}
+        <div className="profile-header text-center mb-4"> {/* Reducido margin */}
+          <h1 className="fw-bold" style={{color: '#22298d', fontSize: '2.2rem'}}>Mi Perfil Freelancer</h1>
+          <p className="lead text-muted" style={{fontSize: '1.1rem'}}>Gestiona tu información profesional y destaca tus habilidades</p>
         </div>
 
-        <div className="row">
-          {/* Columna izquierda - Información principal */}
-          <div className="col-lg-8">
+        {/* Contenedor más ancho y centrado */}
+        <div className="row justify-content-center">
+          {/* Información principal - Más ancha */}
+          <div className="col-lg-10 col-xl-9"> {/* Más ancho que antes */}
             <div className="profile-card card border-0 shadow-sm mb-4">
               <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h5 className="mb-0">Información Profesional</h5>
@@ -179,82 +174,22 @@ export default function FreelanceProfile() {
                 )}
               </div>
             </div>
-          </div>
 
-          {/* Columna derecha - Estadísticas y información adicional */}
-          <div className="col-lg-4">
-            {/* Tarifa y estadísticas */}
-            <div className="stats-card card border-0 shadow-sm mb-4">
-              <div className="card-header bg-info text-white">
-                <h6 className="mb-0">Mi Tarifa Actual</h6>
-              </div>
-              <div className="card-body text-center">
-                <div className="hourly-rate-display">
-                  <h3 className="fw-bold text-primary">{formatCOP(profile.hourlyRate)}</h3>
-                  <p className="text-muted mb-0">por hora</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Estadísticas rápidas */}
-            <div className="stats-card card border-0 shadow-sm mb-4">
-              <div className="card-header bg-success text-white">
-                <h6 className="mb-0">Estadísticas</h6>
-              </div>
-              <div className="card-body">
-                <div className="stat-item d-flex justify-content-between mb-3">
-                  <span>Proyectos Completados</span>
-                  <strong className="text-primary">12</strong>
-                </div>
-                <div className="stat-item d-flex justify-content-between mb-3">
-                  <span>Clientes Satisfechos</span>
-                  <strong className="text-success">10</strong>
-                </div>
-                <div className="stat-item d-flex justify-content-between mb-3">
-                  <span>Propuestas Activas</span>
-                  <strong className="text-warning">3</strong>
-                </div>
-                <div className="stat-item d-flex justify-content-between">
-                  <span>Calificación Promedio</span>
-                  <strong className="text-info">4.8/5</strong>
-                </div>
-              </div>
-            </div>
-
-            {/* Información de cuenta */}
-            <div className="info-card card border-0 shadow-sm">
-              <div className="card-header bg-secondary text-white">
-                <h6 className="mb-0">Información de Cuenta</h6>
-              </div>
-              <div className="card-body">
-                <div className="account-info">
-                  <p><strong>Freelance ID:</strong> #{profile.freelanceId}</p>
-                  <p><strong>Usuario ID:</strong> #{profile.userId}</p>
-                  <p><strong>Miembro desde:</strong> Enero 2024</p>
-                  <p><strong>Última actualización:</strong> Hoy</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Sección de acciones rápidas */}
-        <div className="row mt-4">
-          <div className="col-12">
+            {/* Acciones rápidas */}
             <div className="quick-actions card border-0 shadow-sm">
-              <div className="card-body text-center">
-                <h5 className="mb-3">Acciones Rápidas</h5>
+              <div className="card-body text-center p-4">
+                <h5 className="mb-3" style={{color: '#22298d'}}>Acciones Rápidas</h5>
                 <div className="d-flex justify-content-center gap-3 flex-wrap">
-                  <button className="btn btn-outline-primary">
+                  <button className="btn btn-outline-primary btn-action">
                     Ver Mis Propuestas
                   </button>
-                  <button className="btn btn-outline-success">
+                  <button className="btn btn-outline-success btn-action">
                     Proyectos Activos
                   </button>
-                  <button className="btn btn-outline-info">
+                  <button className="btn btn-outline-info btn-action">
                     Actualizar Portfolio
                   </button>
-                  <button className="btn btn-outline-warning">
+                  <button className="btn btn-outline-warning btn-action">
                     Configuración
                   </button>
                 </div>

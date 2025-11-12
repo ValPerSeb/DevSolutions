@@ -1,198 +1,167 @@
 .freelance-profile-container {
   min-height: calc(100vh - 160px);
   background-color: #f8f9fa;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 20px; /* Reducido para subir más */
 }
 
 .profile-header {
-  padding: 2rem 0;
+  padding: 1rem 0; /* Reducido padding */
 }
 
-/* Avatar */
-.avatar-circle {
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(135deg, #22298d, #6B4C9A);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  color: white;
-  font-size: 2rem;
-  font-weight: bold;
-  box-shadow: 0 4px 15px rgba(34, 41, 141, 0.3);
-}
-
-/* Profile Cards */
-.profile-card, .stats-card, .info-card, .quick-actions {
+/* Contenedor del perfil más ancho */
+.profile-card {
   border-radius: 15px;
   overflow: hidden;
+  transition: none;
 }
 
-.profile-card .card-header, .stats-card .card-header, .info-card .card-header {
-  border: none;
-  font-weight: 600;
+.profile-card:hover {
+  transform: none;
 }
 
-/* Display Texts */
+/* Más espacio para contenido más ancho */
+.profile-card .card-body {
+  padding: 2rem; /* Más padding interno */
+}
+
+/* Textos de display más amplios */
 .profile-display-text {
   background: #f8f9fa;
-  padding: 12px 15px;
-  border-radius: 8px;
+  padding: 14px 18px; /* Más padding */
+  border-radius: 10px;
   border-left: 4px solid #22298d;
   margin-bottom: 0;
   line-height: 1.6;
+  font-size: 1.05rem; /* Texto ligeramente más grande */
 }
 
-.rate-display {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #28a745 !important;
+/* Inputs más anchos */
+.profile-card .form-control {
+  padding: 12px 16px;
+  font-size: 1rem;
 }
 
-/* Skills Display */
+/* Skills display más espaciado */
 .skills-display {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px; /* Más espacio entre skills */
 }
 
 .skill-badge {
   background: linear-gradient(135deg, #22298d, #6B4C9A);
   color: white;
-  padding: 6px 12px;
+  padding: 8px 16px; /* Más padding */
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
   transition: transform 0.2s ease;
 }
 
 .skill-badge:hover {
-  transform: translateY(-2px);
+  transform: scale(1.05);
 }
 
-/* Hourly Rate Display */
-.hourly-rate-display {
-  padding: 20px 0;
+.rate-display {
+  font-size: 1.3rem; /* Más grande */
+  font-weight: 700;
+  color: #28a745 !important;
 }
 
-.hourly-rate-display h3 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+/* Acciones rápidas */
+.quick-actions {
+  margin-top: 2rem;
+  border-radius: 15px;
 }
 
-/* Stats Items */
-.stat-item {
-  padding: 8px 0;
-  border-bottom: 1px solid #e9ecef;
+.quick-actions .card-body {
+  padding: 2rem;
 }
 
-.stat-item:last-child {
-  border-bottom: none;
-}
-
-.stat-item strong {
-  font-size: 1.1rem;
-}
-
-/* Account Info */
-.account-info p {
-  margin-bottom: 0.5rem;
-  padding: 5px 0;
-  border-bottom: 1px solid #f1f1f1;
-}
-
-.account-info p:last-child {
-  border-bottom: none;
-}
-
-/* Quick Actions */
-.quick-actions .btn {
-  border-radius: 25px;
-  padding: 10px 20px;
-  font-weight: 500;
+.btn-action {
+  padding: 12px 24px; /* Botones más grandes */
+  font-weight: 600;
+  border-radius: 10px;
   transition: all 0.3s ease;
+  min-width: 160px; /* Ancho mínimo consistente */
 }
 
-.quick-actions .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.btn-action:hover {
+  transform: scale(1.05);
 }
 
-/* Form Controls */
-.form-control {
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  padding: 12px 15px;
-  transition: all 0.3s ease;
-}
-
-.form-control:focus {
+.btn-outline-primary:hover {
+  background-color: #22298d;
   border-color: #22298d;
-  box-shadow: 0 0 0 0.2rem rgba(34, 41, 141, 0.25);
 }
 
-/* Buttons */
-.btn {
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.btn-outline-success:hover {
+  background-color: #28a745;
+  border-color: #28a745;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #22298d, #6B4C9A);
-  border: none;
+.btn-outline-info:hover {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(34, 41, 141, 0.4);
+.btn-outline-warning:hover {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
 }
 
-/* Responsive Design */
+/* Botones de edición */
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+  transform: scale(1.02);
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+  transform: scale(1.02);
+}
+
+.btn-light:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
+}
+
 @media (max-width: 768px) {
   .freelance-profile-container {
     min-height: calc(100vh - 140px);
+    padding-top: 15px;
   }
   
-  .profile-header h1 {
-    font-size: 1.8rem;
+  .profile-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .btn-action {
+    min-width: 140px;
+    margin-bottom: 10px;
   }
   
   .skills-display {
     justify-content: center;
   }
+}
+
+@media (max-width: 576px) {
+  .profile-header h1 {
+    font-size: 1.8rem !important;
+  }
   
-  .quick-actions .btn {
-    margin-bottom: 10px;
+  .profile-header .lead {
+    font-size: 1rem !important;
+  }
+  
+  .btn-action {
     width: 100%;
+    min-width: auto;
   }
-  
-  .hourly-rate-display h3 {
-    font-size: 2rem;
-  }
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.profile-card, .stats-card, .info-card {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-/* Input Group */
-.input-group-text {
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  font-weight: 600;
-  color: #22298d;
 }

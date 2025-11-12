@@ -1,0 +1,117 @@
+.empresa-profile-container {
+  min-height: calc(100vh - 160px);
+  background-color: #f8f9fa;
+}
+
+.profile-header {
+  padding: 2rem 0;
+}
+
+.profile-card, .actions-card {
+  border-radius: 15px;
+  overflow: hidden;
+  transition: none; /* Elimina transición de contenedores */
+}
+
+.profile-card:hover, .actions-card:hover {
+  transform: none; /* Elimina hover de contenedores */
+}
+
+.profile-display-text {
+  background: #f8f9fa;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border-left: 4px solid #22298d;
+  margin-bottom: 0;
+}
+
+.empresa-card-header {
+  background: linear-gradient(135deg, #22298d, #1a237e) !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* SOLO LOS BOTONES TIENEN HOVER */
+.btn-empresa-primary {
+  background: linear-gradient(135deg, #22298d, #1b2178);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 15px 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(34, 41, 141, 0.3);
+}
+
+.btn-empresa-primary:hover {
+  background: linear-gradient(135deg, #1b2178, #161d6a);
+  box-shadow: 0 6px 20px rgba(34, 41, 141, 0.4);
+  color: white;
+  /* Solo el botón se transforma, no el contenedor */
+}
+
+.btn-empresa-outline {
+  background: transparent;
+  color: #22298d;
+  border: 2px solid #22298d;
+  border-radius: 10px;
+  padding: 15px 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-empresa-outline:hover {
+  background: #22298d;
+  color: white;
+  box-shadow: 0 4px 15px rgba(34, 41, 141, 0.3);
+  /* Solo el botón se transforma, no el contenedor */
+}
+
+.account-info p {
+  margin-bottom: 0.5rem;
+  padding: 5px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.account-info p:last-child {
+  border-bottom: none;
+}
+
+/* Botones del card header (Editar/Cancelar) */
+.profile-card .btn-light {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.profile-card .btn-light:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.profile-card .btn-warning {
+  background: #ffc107;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.profile-card .btn-warning:hover {
+  background: #e0a800;
+}
+
+.profile-card .btn-success {
+  background: #28a745;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.profile-card .btn-success:hover {
+  background: #218838;
+}
+
+@media (max-width: 768px) {
+  .empresa-profile-container {
+    min-height: calc(100vh - 140px);
+  }
+}

@@ -24,7 +24,7 @@ export default function Home() {
               <Link to="/Freelancer" className="btn btn-light fw-semibold px-4">
                 Soy Freelancer
               </Link>
-              <Link to="/Login" className="btn btn-outline-light fw-semibold px-4">
+              <Link to="/EmpresaProfile" className="btn btn-outline-light fw-semibold px-4">
                 Soy Empresa
               </Link>
               <Link to="/FreelanceProfile" className="btn btn-outline-light fw-semibold px-4">
@@ -101,16 +101,6 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Links secundarios */}
-            <div className="mt-5 d-flex justify-content-center gap-4">
-              <Link to="/Projects" className="btn btn-primary px-4" style={{ backgroundColor: "#22298d", borderColor: "#22298d" }}>
-                Ver Proyectos
-              </Link>
-              <Link to="/Companies" className="btn btn-outline-primary px-4" style={{ color: "#22298d", borderColor: "#22298d" }}>
-                Ver Empresas
-              </Link>
             </div>
           </div>
         </section>
