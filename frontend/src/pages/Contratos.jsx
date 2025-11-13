@@ -1,61 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/Contratos.css";
+import { useAuth } from '../context/AuthContext';
+import { getAllContracts, updateContract } from '../services/contractService';
+import { createPreference } from '../services/mercadoPagoService';
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+
+initMercadoPago(import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY);
 
 export default function Contratos() {
-  const [contratos, setContratos] = useState([
-    {
-      contractId: 1,
-      freelanceName: "Carlos Rodríguez",
-      title: "Desarrollo App Móvil",
-      description: "Desarrollo de aplicación móvil para gestión de proyectos",
-      startDate: "2025-01-15",
-      endDate: "2025-03-15",
-      hourlyRate: 45000,
-      hoursPerWeek: 30,
-      status: "Activo",
-      totalHours: 120,
-      amountDue: 5400000
-    },
-    {
-      contractId: 2,
-      freelanceName: "Ana Martínez",
-      title: "Diseño UI/UX Plataforma",
-      description: "Diseño de experiencia de usuario para plataforma web",
-      startDate: "2025-02-01",
-      endDate: "2025-02-28",
-      hourlyRate: 38000,
-      hoursPerWeek: 25,
-      status: "Completado",
-      totalHours: 100,
-      amountDue: 3800000
-    },
-    {
-      contractId: 3,
-      freelanceName: "David López",
-      title: "Desarrollo Backend API",
-      description: "API REST para sistema de gestión de contenido",
-      startDate: "2025-03-01",
-      endDate: "2025-04-15",
-      hourlyRate: 52000,
-      hoursPerWeek: 35,
-      status: "Activo",
-      totalHours: 80,
-      amountDue: 4160000
-    }
-  ]);
+  const { profile, role, token, loading: authLoading } = useAuth();
+  const [contracts, setContracts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [payingContract, setPayingContract] = useState(null);
+  const [preferences, setPreferences] = useState({});
 
-  const handlePagar = (contractId) => {
-    // Aquí iría la integración con el sistema de pagos
-    alert(`Iniciando proceso de pago para contrato #${contractId}`);
-    // Actualizar estado del contrato
-    setContratos(contratos.map(contrato => 
-      contrato.contractId === contractId 
-        ? { ...contrato, status: "Pagado" }
-        : contrato
-    ));
+  /**
+   * Fetch contracts on component mount
+   */
+  useEffect(() => {
+    if (!authLoading && profile && token) {
+      fetchContracts();
+    } else if (!authLoading && !profile) {
+      setError('No se encontró el perfil. Por favor, inicia sesión nuevamente.');
+      setLoading(false);
+    }
+  }, [profile, token, authLoading]);
+
+  /**
+   * Fetch all contracts and filter by role
+   */
+  const fetchContracts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getAllContracts();
+
+      // Filter contracts based on role
+      let filtered = data || [];
+      if (role === 'freelance') {
+        filtered = filtered.filter(c => c.freelanceId === profile);
+      } else if (role === 'client') {
+        filtered = filtered.filter(c => c.clientId === profile);
+      }
+
+      setContracts(filtered);
+    } catch (err) {
+      console.error('Error fetching contracts:', err);
+      setError(err.response?.data?.error || 'Error al cargar los contratos. Por favor, intenta nuevamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
+  /**
+   * Format currency to COP
+   */
   const formatCOP = (amount) => {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -65,8 +67,58 @@ export default function Contratos() {
     }).format(amount);
   };
 
+  /**
+   * Format date in Spanish
+   */
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('es-CO');
+  };
+
+  /**
+   * Get count of paid contracts
+   */
+  const getPaidContractsCount = () => {
+    return contracts.filter(c => c.paymentStatus === 'paid').length;
+  };
+
+  /**
+   * Get count of pending contracts
+   */
+  const getPendingContractsCount = () => {
+    return contracts.filter(c => c.paymentStatus === 'pending').length;
+  };
+
+
+  const handlePagar = async (contract) => {
+    try {
+      setPayingContract(contract.contractId);
+      setError(null);
+
+      const mercadopagoForm = {
+        title: 'Pago de Contrato: ' + contract.contractId,
+        description: contract.description,
+        price: contract.totalAmount,
+        quantity: 1,
+        contractId: contract.contractId
+      };
+
+      const preferenceResponse = await createPreference(mercadopagoForm);
+
+      if (!preferenceResponse || !preferenceResponse.id) {
+        setError('Error al crear la preferencia de pago. Por favor, intenta nuevamente.');
+        return;
+      }
+
+      setPreferences(prev => ({
+        ...prev,
+        [contract.contractId]: preferenceResponse.id
+      }));
+
+    } catch (err) {
+      console.error('Error al crear la preferencia de pago: ', err);
+      setError(err.response?.data?.error || 'Error al crear la preferencia de pago. Por favor, intenta nuevamente.');
+      setPayingContract(null);
+    }
   };
 
   return (
@@ -74,141 +126,169 @@ export default function Contratos() {
       <div className="container py-5">
         {/* Header */}
         <div className="contratos-header text-center mb-5">
-          <h1 className="fw-bold" style={{color: '#22298d'}}>Gestión de Contratos</h1>
+          <h1 className="fw-bold" style={{ color: '#22298d' }}>Gestión de Contratos</h1>
           <p className="lead text-muted">Administra y realiza pagos de tus contratos activos</p>
         </div>
 
-        {/* Estadísticas */}
-        <div className="row mb-4">
-          <div className="col-md-3">
-            <div className="stat-card text-center p-3">
-              <h3 className="fw-bold text-primary">{contratos.length}</h3>
-              <p className="text-muted mb-0">Total Contratos</p>
+        {/* Error Alert */}
+        {error && !loading && (
+          <div className="row mb-4">
+            <div className="col-12">
+              <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> {error}
+                <button type="button" className="btn-close" onClick={() => setError(null)}></button>
+              </div>
             </div>
           </div>
-          <div className="col-md-3">
-            <div className="stat-card text-center p-3">
-              <h3 className="fw-bold text-success">{contratos.filter(c => c.status === 'Activo').length}</h3>
-              <p className="text-muted mb-0">Contratos Activos</p>
+        )}
+
+        {/* Success Message */}
+        {successMessage && (
+          <div className="row mb-4">
+            <div className="col-12">
+              <div className="alert alert-success alert-dismissible fade show" role="alert">
+                {successMessage}
+                <button type="button" className="btn-close" onClick={() => setSuccessMessage('')}></button>
+              </div>
             </div>
           </div>
-          <div className="col-md-3">
-            <div className="stat-card text-center p-3">
-              <h3 className="fw-bold text-warning">{contratos.filter(c => c.status === 'Completado').length}</h3>
-              <p className="text-muted mb-0">Completados</p>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="row">
+            <div className="col-12 text-center py-5">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Cargando...</span>
+              </div>
+              <p className="mt-3 text-muted">Cargando contratos...</p>
             </div>
           </div>
-          <div className="col-md-3">
-            <div className="stat-card text-center p-3">
-              <h3 className="fw-bold text-info">
-                {formatCOP(contratos.reduce((sum, contrato) => sum + contrato.amountDue, 0))}
-              </h3>
-              <p className="text-muted mb-0">Total Pendiente</p>
+        ) : (
+          <>
+            {/* Estadísticas */}
+            <div className="row mb-4 justify-content-center">
+              <div className="col-md-3">
+                <div className="stat-card text-center p-3">
+                  <h3 className="fw-bold text-primary">{contracts.length}</h3>
+                  <p className="text-muted mb-0">Total Contratos</p>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="stat-card text-center p-3">
+                  <h3 className="fw-bold text-success">{getPaidContractsCount()}</h3>
+                  <p className="text-muted mb-0">Contratos Pagados</p>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="stat-card text-center p-3">
+                  <h3 className="fw-bold text-warning">{getPendingContractsCount()}</h3>
+                  <p className="text-muted mb-0">Contratos pendientes de pago</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Lista de Contratos */}
-        <div className="row">
-          {contratos.map((contrato) => (
-            <div key={contrato.contractId} className="col-12 mb-4">
-              <div className="contrato-card card border-0 shadow-sm">
-                <div className="card-body p-4">
-                  <div className="row align-items-center">
-                    {/* Información del contrato */}
-                    <div className="col-md-8">
-                      <div className="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                          <h5 className="fw-bold text-primary mb-2">{contrato.title}</h5>
-                          <p className="text-muted mb-1">
-                            <strong>Freelancer:</strong> {contrato.freelanceName}
-                          </p>
-                        </div>
-                        <span className={`badge ${contrato.status === 'Activo' ? 'bg-success' : 'bg-secondary'}`}>
-                          {contrato.status}
-                        </span>
-                      </div>
+            {/* Lista de Contratos */}
+            <div className="row">
+              {contracts.length > 0 ? (
+                contracts.map((contrato) => (
+                  <div key={contrato.contractId} className="col-12 mb-4">
+                    <div className="contrato-card card border-0 shadow-sm">
+                      <div className="card-body p-4">
+                        <div className="row align-items-center">
+                          {/* Información del contrato */}
+                          <div className="col-md-8">
+                            <div className="d-flex justify-content-between align-items-start mb-3">
+                              <div>
+                                <h5 className="fw-bold text-primary mb-2">{contrato.description}</h5>
+                                <p className="text-muted mb-1">
+                                  <strong>{role === 'freelance' ? 'Cliente' : 'Freelancer'}:</strong> {role === 'freelance' ? contrato.clientId : contrato.freelanceId}
+                                </p>
+                              </div>
+                              <span className={`badge ${contrato.paymentStatus === 'paid' ? 'bg-success' : contrato.paymentStatus === 'pending' ? 'bg-warning' : 'bg-danger'}`}>
+                                {contrato.paymentStatus === 'paid' ? 'Pagado' : contrato.paymentStatus === 'pending' ? 'Pendiente' : 'Rechazado'}
+                              </span>
+                            </div>
 
-                      <p className="text-muted mb-3">{contrato.description}</p>
+                            <p className="text-muted mb-3">{contrato.description}</p>
 
-                      <div className="contrato-details row">
-                        <div className="col-6 col-md-3">
-                          <small className="text-muted">Inicio</small>
-                          <p className="mb-0 fw-semibold">{formatDate(contrato.startDate)}</p>
-                        </div>
-                        <div className="col-6 col-md-3">
-                          <small className="text-muted">Fin</small>
-                          <p className="mb-0 fw-semibold">{formatDate(contrato.endDate)}</p>
-                        </div>
-                        <div className="col-6 col-md-3">
-                          <small className="text-muted">Tarifa/Hora</small>
-                          <p className="mb-0 fw-semibold">{formatCOP(contrato.hourlyRate)}</p>
-                        </div>
-                        <div className="col-6 col-md-3">
-                          <small className="text-muted">Horas/Semana</small>
-                          <p className="mb-0 fw-semibold">{contrato.hoursPerWeek}h</p>
-                        </div>
-                      </div>
-                    </div>
+                            <div className="contrato-details row">
+                              <div className="col-6 col-md-3">
+                                <small className="text-muted">Inicio</small>
+                                <p className="mb-0 fw-semibold">{formatDate(contrato.startDate)}</p>
+                              </div>
+                              <div className="col-6 col-md-3">
+                                <small className="text-muted">Fin</small>
+                                <p className="mb-0 fw-semibold">{formatDate(contrato.endDate)}</p>
+                              </div>
+                              <div className="col-6 col-md-3">
+                                <small className="text-muted">Tarifa/Hora</small>
+                                <p className="mb-0 fw-semibold">{formatCOP(contrato.hourlyRate)}</p>
+                              </div>
+                              <div className="col-6 col-md-3">
+                                <small className="text-muted">Total de Horas</small>
+                                <p className="mb-0 fw-semibold">{contrato.totalHours || 0}h</p>
+                              </div>
+                            </div>
+                          </div>
 
-                    {/* Acciones y pago */}
-                    <div className="col-md-4 text-center">
-                      <div className="pago-section">
-                        <h4 className="fw-bold text-success mb-2">
-                          {formatCOP(contrato.amountDue)}
-                        </h4>
-                        <p className="text-muted mb-3">
-                          {contrato.totalHours} horas trabajadas
-                        </p>
-                        
-                        {contrato.status === 'Activo' && (
-                          <button 
-                            className="btn btn-success btn-lg w-100"
-                            onClick={() => handlePagar(contrato.contractId)}
-                          >
-                            <i className="bi bi-credit-card me-2"></i>
-                            Pagar Contrato
-                          </button>
-                        )}
-                        
-                        {contrato.status === 'Completado' && (
-                          <button className="btn btn-secondary btn-lg w-100" disabled>
-                            Pagado
-                          </button>
-                        )}
+                          {/* Acciones y pago */}
+                          <div className="col-md-4 text-center">
+                            <div className="pago-section">
+                              <h4 className="fw-bold text-success mb-2">
+                                {formatCOP(contrato.totalAmount || 0)}
+                              </h4>
 
-                        <div className="mt-3">
-                          <button className="btn btn-outline-primary btn-sm me-2">
-                            Ver Detalles
-                          </button>
-                          <button className="btn btn-outline-secondary btn-sm">
-                            Descargar
-                          </button>
+                              {role === 'freelance' ? (
+                                // Freelancer view - Show status only
+                                <div className="alert alert-info mb-0">
+                                  <strong>{contrato.paymentStatus === 'paid' ? 'Pagado' : 'Pendiente de Pago'}</strong>
+                                </div>
+                              ) : role === 'client' && preferences[contrato.contractId] ? (
+                                <div style={{ width: '300px' }}>
+                                  <Wallet initialization={{ preferenceId: preferences[contrato.contractId] }} />
+                                </div>
+                              ) : role === 'client' ? (
+                                <>
+                                  {contrato.paymentStatus === 'pending' ? (
+                                    <button
+                                      className="btn btn-success btn-lg w-100"
+                                      onClick={() => handlePagar(contrato)}
+                                      disabled={payingContract === contrato.contractId}
+                                    >
+                                      <i className="bi bi-credit-card me-2"></i>
+                                      {payingContract === contrato.contractId ? 'Procesando...' : 'Pagar Contrato'}
+                                    </button>
+                                  ) : contrato.paymentStatus === 'paid' ? (
+                                    <button className="btn btn-secondary btn-lg w-100" disabled>
+                                      ✓ Pagado
+                                    </button>
+                                  ) : (
+                                    <button className="btn btn-secondary btn-lg w-100" disabled>
+                                      X Rechazado
+                                    </button>
+                                  )}
+                                </>
+                              ) : null}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="col-12">
+                  <div className="text-center py-5">
+                    <div className="empty-state">
+                      <i className="bi bi-file-earmark-text display-1 text-muted mb-3"></i>
+                      <h4 className="text-muted">No hay contratos activos</h4>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
-          ))}
-        </div>
-
-        {/* Sin contratos */}
-        {contratos.length === 0 && (
-          <div className="text-center py-5">
-            <div className="empty-state">
-              <i className="bi bi-file-earmark-text display-1 text-muted mb-3"></i>
-              <h4 className="text-muted">No hay contratos activos</h4>
-              <p className="text-muted">Crea ofertas para empezar a trabajar con freelancers</p>
-              <button 
-                className="btn btn-primary btn-lg"
-                onClick={() => window.location.href = '/CrearOferta'}
-              >
-                Crear Primera Oferta
-              </button>
-            </div>
-          </div>
+          </>
         )}
       </div>
     </div>

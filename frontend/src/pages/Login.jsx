@@ -1,10 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import '../assets/Login.css';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [form, setForm] = useState({
+    credential: "",
+    password: ""
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!form.credential || !form.password) {
+      setError("Por favor completa todos los campos.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await login(form.credential, form.password);
+      if (res.role === 'freelance') {
+        navigate("/FreelanceProfile");
+      } else if (res.role === 'client') {
+        navigate("/EmpresaProfile");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      if (err.response?.status === 401) {
+        setError("Usuario/email o contraseña incorrectos.");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Error al conectar con el servidor.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div id="login-page">
       <div className="container">
@@ -18,13 +64,18 @@ export default function Login() {
                 <p className="text-muted">Accede a tu cuenta DevSolutions</p>
               </div>
               
-              <form>
+              {error && <div className="alert alert-danger" role="alert">{error}</div>}
+              
+              <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="username" className="form-label fw-semibold">Usuario o Email</label>
+                  <label htmlFor="credential" className="form-label fw-semibold">Usuario o Email</label>
                   <input 
                     type="text" 
                     className="form-control" 
-                    id="username" 
+                    id="credential"
+                    name="credential"
+                    value={form.credential}
+                    onChange={handleChange}
                     placeholder="Ingresa tu usuario o email" 
                   />
                 </div>
@@ -34,14 +85,21 @@ export default function Login() {
                   <input 
                     type="password" 
                     className="form-control" 
-                    id="password" 
+                    id="password"
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
                     placeholder="Ingresa tu contraseña" 
                   />
                 </div>
 
                 <div className="text-center mb-3">
-                  <button type="submit" className="btn btn-primary w-100 py-2 fw-semibold">
-                    Iniciar Sesión
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary w-100 py-2 fw-semibold"
+                    disabled={loading}
+                  >
+                    {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
                   </button>
                 </div>
 
