@@ -1,0 +1,167 @@
+.freelance-profile-container {
+  min-height: calc(100vh - 160px);
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 20px; /* Reducido para subir más */
+}
+
+.profile-header {
+  padding: 1rem 0; /* Reducido padding */
+}
+
+/* Contenedor del perfil más ancho */
+.profile-card {
+  border-radius: 15px;
+  overflow: hidden;
+  transition: none;
+}
+
+.profile-card:hover {
+  transform: none;
+}
+
+/* Más espacio para contenido más ancho */
+.profile-card .card-body {
+  padding: 2rem; /* Más padding interno */
+}
+
+/* Textos de display más amplios */
+.profile-display-text {
+  background: #f8f9fa;
+  padding: 14px 18px; /* Más padding */
+  border-radius: 10px;
+  border-left: 4px solid #22298d;
+  margin-bottom: 0;
+  line-height: 1.6;
+  font-size: 1.05rem; /* Texto ligeramente más grande */
+}
+
+/* Inputs más anchos */
+.profile-card .form-control {
+  padding: 12px 16px;
+  font-size: 1rem;
+}
+
+/* Skills display más espaciado */
+.skills-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Más espacio entre skills */
+}
+
+.skill-badge {
+  background: linear-gradient(135deg, #22298d, #6B4C9A);
+  color: white;
+  padding: 8px 16px; /* Más padding */
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.skill-badge:hover {
+  transform: scale(1.05);
+}
+
+.rate-display {
+  font-size: 1.3rem; /* Más grande */
+  font-weight: 700;
+  color: #28a745 !important;
+}
+
+/* Acciones rápidas */
+.quick-actions {
+  margin-top: 2rem;
+  border-radius: 15px;
+}
+
+.quick-actions .card-body {
+  padding: 2rem;
+}
+
+.btn-action {
+  padding: 12px 24px; /* Botones más grandes */
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  min-width: 160px; /* Ancho mínimo consistente */
+}
+
+.btn-action:hover {
+  transform: scale(1.05);
+}
+
+.btn-outline-primary:hover {
+  background-color: #22298d;
+  border-color: #22298d;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-outline-info:hover {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.btn-outline-warning:hover {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+}
+
+/* Botones de edición */
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+  transform: scale(1.02);
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+  transform: scale(1.02);
+}
+
+.btn-light:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .freelance-profile-container {
+    min-height: calc(100vh - 140px);
+    padding-top: 15px;
+  }
+  
+  .profile-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .btn-action {
+    min-width: 140px;
+    margin-bottom: 10px;
+  }
+  
+  .skills-display {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-header h1 {
+    font-size: 1.8rem !important;
+  }
+  
+  .profile-header .lead {
+    font-size: 1rem !important;
+  }
+  
+  .btn-action {
+    width: 100%;
+    min-width: auto;
+  }
+}
