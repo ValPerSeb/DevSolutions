@@ -21,14 +21,11 @@ export default function Home() {
               desarrollo, diseño y tecnología. Regístrate, crea tu perfil y comienza a trabajar en proyectos reales.
             </p>
             <div className="d-flex justify-content-center gap-3">
-              <Link to="/Freelancer" className="btn btn-light fw-semibold px-4">
+              <Link to="/FreelanceProfile" className="btn btn-light fw-semibold px-4">
                 Soy Freelancer
               </Link>
               <Link to="/EmpresaProfile" className="btn btn-outline-light fw-semibold px-4">
                 Soy Empresa
-              </Link>
-              <Link to="/FreelanceProfile" className="btn btn-outline-light fw-semibold px-4">
-                Perfil Freelancer "Provisional"
               </Link>
             </div>
           </div>
